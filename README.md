@@ -16,8 +16,8 @@ Derivatives are computed using `FiniteDifferences`.
 Define a fitness function to return the objective, equality constraint(s), and inequality constraint(s):
 
 ```julia
-function f_fitness(x...)    
-	# objective
+function f_fitness(x...)
+    # objective
     f = x[1]^2 - x[2]
     
     # equality constraints
