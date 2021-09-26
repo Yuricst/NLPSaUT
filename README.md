@@ -38,7 +38,6 @@ Then, the `NLPJuMP` module may be used as follows:
 
 ```julia
 using JuMP
-push!(LOAD_PATH, "../NLPJuMP/src/")
 using NLPJuMP
 
 # problem dimensions
