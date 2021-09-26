@@ -1,9 +1,15 @@
 # NLPJuMP
 Wrapper for constructing NLP with Julia
 
-This module provides a wrapper to build a JuMP module around a user-defined NLP problem.
+This module provides a wrapper to build a JuMP module around a user-defined NLP problem. 
 The function must return a fitness vector, which stores the objective, equality constraint(s), and inequality constraint(s), in this order.  
+
+The module supports either appending variables, objectives, and constraints into an existing `JuMP.Model` constructed a priori; if a `JuMP.Model` is not provided, an `Ipopt` based `JuMP.Model` is constructed by default. 
+
 Derivatives are computed using `FiniteDifferences`. 
+
+### Dependencies
+- `JuMP`, `Ipopt`, `FiniteDifferences`
 
 ### Examples
 
@@ -36,9 +42,9 @@ push!(LOAD_PATH, "../NLPJuMP/src/")
 using NLPJuMP
 
 # problem dimensions
-nx = 2                   # decision vectors
-nh = 1                   # equality constraints
-ng = 2                   # inequality constraints
+nx = 2                   # number of decision vectors
+nh = 1                   # number of equality constraints
+ng = 2                   # number of inequality constraints
 lx = -10*ones(nx,)
 ux =  10*ones(nx,)
 x0 = [1.2, 0.9]

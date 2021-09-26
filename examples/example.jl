@@ -34,9 +34,9 @@ end
 # ------------------------------------------------------------------------- #
 ## Solve model
 # problem dimensions
-nx = 2                   # decision vectors
-nh = 1                   # equality constraints
-ng = 2                   # inequality constraints
+nx = 2                   # number of decision vectors
+nh = 1                   # number of equality constraints
+ng = 2                   # number of inequality constraints
 lx = -10*ones(nx,)
 ux =  10*ones(nx,)
 x0 = [1.2, 0.9]
