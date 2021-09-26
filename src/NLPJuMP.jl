@@ -20,6 +20,6 @@ include("model.jl")
 
 # export functions
 export memoize_fitness, memoize_fitness_gradient
-export build_model
+export build_model, build_model!
 
 end

@@ -3,7 +3,7 @@ Example using NLPJuMP
 """
 
 using JuMP
-push!(LOAD_PATH, "../NLPJuMP/src/")
+push!(LOAD_PATH, "../src/")
 using NLPJuMP
 
 
@@ -42,7 +42,11 @@ ux =  10*ones(nx,)
 x0 = [1.2, 0.9]
 
 # get model
-x, model = build_model(f_fitness, nx, nh, ng, lx, ux, x0)
+order = 2
+diff_f = "forward"
+x, model = build_model(f_fitness, nx, nh, ng, lx, ux, x0, order, diff_f)
+set_optimizer_attribute(model, "tol", 1e-6)
+set_optimizer_attribute(model, "print_level", 5)
 println(model)
 optimize!(model)
 
