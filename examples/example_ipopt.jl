@@ -1,5 +1,5 @@
 """
-Example using NLPJuMP
+Example using NLPJuMP with Ipopt
 """
 
 using JuMP
@@ -48,6 +48,8 @@ x, model = build_model(f_fitness, nx, nh, ng, lx, ux, x0, order, diff_f)
 set_optimizer_attribute(model, "tol", 1e-6)
 set_optimizer_attribute(model, "print_level", 5)
 println(model)
+
+# run optimizer
 optimize!(model)
 
 # print results
