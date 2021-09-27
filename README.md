@@ -61,7 +61,7 @@ println("Objective: ")
 println(objective_value(model))
 ```
 
-If the derivative method and order is to be specified, replace the above with
+If the derivative method and order is to be specified, replace the above with:
 
 ```julia
 # problem dimensions
@@ -78,6 +78,29 @@ diff_f = "forward"
 x, model = build_model(f_fitness, nx, nh, ng, lx, ux, x0, order, diff_f)
 set_optimizer_attribute(model, "tol", 1e-6)
 set_optimizer_attribute(model, "print_level", 5)
-println(model)
+
+optimize!(model)
+```
+
+If using a pre-build model, use the mutating version of the function:
+
+```julia
+# build SNOPT7 model
+using SNOPT7
+model = Model(optimizer_with_attributes(SNOPT7.Optimizer, "print_level"=>5, "system_information"=>"yes"))
+
+# problem dimensions
+nx = 2                   # number of decision vectors
+nh = 1                   # number of equality constraints
+ng = 2                   # number of inequality constraints
+lx = -10*ones(nx,)
+ux =  10*ones(nx,)
+x0 = [1.2, 0.9]
+
+# get model
+order = 2
+diff_f = "forward"
+x = build_model!(model, f_fitness, nx, nh, ng, lx, ux, x0, order, diff_f)
+
 optimize!(model)
 ```
