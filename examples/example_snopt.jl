@@ -43,28 +43,6 @@ function f_fitness(x...)
 end
 
 
-# # ------------------------------------------------------------------------- #
-# m = Model(optimizer_with_attributes(SNOPT7.Optimizer,
-#                                     "print_level"=>0,
-#                                     "system_information"=>"yes"))
-
-# x0 = [1,5,5,1]
-
-# @variable(m, 1 <= x[i=1:4] <= 5)
-# @NLobjective(m, Min, x[1]*x[4]*(x[1]+x[2]+x[3]) + x[3])
-# @NLconstraint(m, x[1]*x[2]*x[3]*x[4] >= 25)
-# @NLconstraint(m, sum(x[i]^2 for i=1:4) == 40)
-
-# JuMP.optimize!(m)
-
-# println(JuMP.value.(x))
-
-# objval = JuMP.objective_value(m)
-# println("Final objective: $objval")
-
-# println(JuMP.termination_status(m))
-
-
 # ------------------------------------------------------------------------- #
 ## Solve model
 # build snopt model

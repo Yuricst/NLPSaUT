@@ -44,7 +44,7 @@ x0 = [1.2, 0.9]
 # get model
 order = 2
 diff_f = "forward"
-x, model = build_model(f_fitness, nx, nh, ng, lx, ux, x0, order, diff_f)
+x, model = build_model(f_fitness, nx, nh, ng, lx, ux, x0)#, order, diff_f)
 set_optimizer_attribute(model, "tol", 1e-6)
 set_optimizer_attribute(model, "print_level", 5)
 println(model)
