@@ -1,5 +1,5 @@
 """
-Example using NLPJuMP with SNOPT7
+Example using NLPSaUT with SNOPT7
 
 # HS71
 Polynomial objective and constraints
@@ -16,7 +16,7 @@ using JuMP
 using SNOPT7
 
 push!(LOAD_PATH, "../src/")
-using NLPJuMP
+using NLPSaUT
 
 
 """

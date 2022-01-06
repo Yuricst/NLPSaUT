@@ -1,9 +1,9 @@
 """
-NLPJuMP.jl
+NLPSaUT.jl
 
-Wrapper to ipopt and snopt in julia
+Wrapper to construct JuMP model for NLPs
 """
-module NLPJuMP
+module NLPSaUT
 
 using JuMP
 using Ipopt
@@ -17,6 +17,7 @@ include("memoize.jl")
 include("append_equalityconstraints.jl")
 include("append_inequalityconstraints.jl")
 include("model.jl")
+include("examples.jl")
 
 # export functions
 export memoize_fitness, memoize_fitness_gradient

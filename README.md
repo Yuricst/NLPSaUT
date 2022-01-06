@@ -1,4 +1,4 @@
-# NLPJuMP
+# NLPSaUT
 Wrapper for constructing NLP with Julia
 
 This module provides a wrapper to build a JuMP module around a user-defined NLP problem. 
@@ -34,11 +34,11 @@ function f_fitness(x...)
 end
 ```
 
-Then, the `NLPJuMP` module may be used as follows:
+Then, the `NLPSaUT` module may be used as follows:
 
 ```julia
 using JuMP
-using NLPJuMP
+using NLPSaUT
 
 # problem dimensions
 nx = 2                   # number of decision vectors
