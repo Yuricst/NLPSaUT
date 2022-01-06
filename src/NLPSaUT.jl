@@ -10,7 +10,7 @@ using Ipopt
 import FiniteDifferences
 
 # generator for constraints
-include("generate_append_function.jl")
+#include("generate_append_function.jl")
 
 # functions to build model
 include("memoize.jl")
