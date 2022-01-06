@@ -51,3 +51,4 @@ function test_ipopt(maxiter=50, verbose=true)
 	println(objective_value(model))
 
 end
+

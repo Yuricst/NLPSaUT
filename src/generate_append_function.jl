@@ -3,7 +3,7 @@ Automated generator for constraint append function
 """
 
 
-function genetate_equalityconstraints_function(nh=20)
+function genetate_equalityconstraints_function(nh=100)
 	open("append_equalityconstraints.jl", "w+") do io
 		write(io, "\"\"\"\n")
 		write(io, "    append_hs!(model::JuMP.Model, x, nh::Int)\n\n")
@@ -28,7 +28,7 @@ function genetate_equalityconstraints_function(nh=20)
 end
 
 
-function genetate_inequalityconstraints_function(ng=20)
+function genetate_inequalityconstraints_function(ng=100)
 	open("append_inequalityconstraints.jl", "w+") do io
 		write(io, "\"\"\"\n")
 		write(io, "    append_gs!(model::JuMP.Model, x, ng::Int)\n\n")
