@@ -1,5 +1,5 @@
 # NLPSaUT
-Wrapper for constructing NLP with Julia
+Wrapper for constructing NLP model with JuMP
 
 This module provides a wrapper to build a JuMP module around a user-defined NLP problem. 
 The function must return a fitness vector, which stores the objective, equality constraint(s), and inequality constraint(s), in this order.  
