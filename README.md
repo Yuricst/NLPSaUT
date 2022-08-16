@@ -2,6 +2,7 @@
 Wrapper for constructing NLP model with JuMP
 
 This module provides a wrapper to build a JuMP module around a user-defined NLP problem. 
+Internally, a memoized function for the fitness function is created (see [JuMP Tips and tricks on NLP](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/tips_and_tricks/)). 
 The function must return a fitness vector, which stores the objective, equality constraint(s), and inequality constraint(s), in this order.  
 
 The module supports either appending variables, objectives, and constraints into an existing `JuMP.Model` constructed a priori; if a `JuMP.Model` is not provided, an `Ipopt` based `JuMP.Model` is constructed by default. 
