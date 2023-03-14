@@ -104,7 +104,7 @@ function build_model!(
 	if isnothing(x0) == true
 		x0 = ones(nx,)
 	end
-	@variable(model, lx[i] <= x[i=keys(lx)] <= ux[i], start = x0[i])
+	@variable(model, lx[i] <= x[i=eachindex(lx)] <= ux[i], start = x0[i])
 
 	# set functions
 	hs = [Symbol("h"*string(idx)) for idx = 1:nh]
@@ -114,19 +114,23 @@ function build_model!(
 	if verbose
 		println("Registering nonlinear function...")
 	end
-	register(model, :f,  nx, memoized_fitness[1], ∇memoized_fitness[1])
+	#register(model, :f,  nx, memoized_fitness[1], ∇memoized_fitness[1])
+    register(model, :f,  nx, memoized_fitness[1]; autodiff=true)
 
 	# append equality constraints
 	if verbose
 		println("Appending  objective & constraints to model...")
 	end
 	for ih = 1:nh
-	    register(model, hs[ih], nx, memoized_fitness[1+ih], ∇memoized_fitness[1+ih])
+	    #register(model, hs[ih], nx, memoized_fitness[1+ih], ∇memoized_fitness[1+ih])
+        register(model, hs[ih], nx, memoized_fitness[1+ih]; autodiff=true)
 	end
 
 	# append inequality constraints
 	for ig = 1:ng
-	    register(model, gs[ig], nx, memoized_fitness[1+nh+ig], ∇memoized_fitness[1+nh+ig])
+	    #register(model, gs[ig], nx, memoized_fitness[1+nh+ig], ∇memoized_fitness[1+nh+ig])
+       register(model, gs[ig], nx, memoized_fitness[1+nh+ig]; autodiff=true)
+
 	end
 
 	# append objective
