@@ -27,6 +27,7 @@ Build model for NLP problem.
 
 """
 function build_model(
+	optimizer,
 	f_fitness::Function, 
 	nx::Int, 
 	nh::Int, 
@@ -36,10 +37,9 @@ function build_model(
 	x0::Vector, 
 	order::Int=2, 
 	diff_f::String="forward",
-	verbose::Bool=false,
 )
 	# Construct JuMP model
-	model = Model(Ipopt.Optimizer)
+	model = Model(optimizer)
 	build_model!(model, f_fitness, nx, nh, ng, lx, ux, x0; order = order, diff_f = diff_f)
 	return model
 end

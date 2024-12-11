@@ -5,7 +5,8 @@ Example using NLPJuMP with Ipopt
 using GLMakie
 using Ipopt
 using JuMP
-# push!(LOAD_PATH, "../src/")
+
+# push!(LOAD_PATH, joinpath(@__DIR__, "../src/"))
 # using NLPSaUT
 include(joinpath(@__DIR__, "../src/NLPSaUT.jl"))
 
@@ -45,8 +46,7 @@ x0 = [-1.2, 10]
 # get model
 order = 2
 diff_f = "forward"
-model = Model(Ipopt.Optimizer)
-NLPSaUT.build_model!(model, f_fitness, nx, nh, ng, lx, ux, x0;)
+model = NLPSaUT.build_model(Ipopt.Optimizer, f_fitness, nx, nh, ng, lx, ux, x0;)
 set_optimizer_attribute(model, "tol", 1e-12)
 set_optimizer_attribute(model, "print_level", 5)
 println(model)

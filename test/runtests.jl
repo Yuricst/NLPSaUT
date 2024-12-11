@@ -1,7 +1,11 @@
 """Test sets"""
 
-using Test
+push!(LOAD_PATH, joinpath(@__DIR__, "../src/"))
+
+using Ipopt
+using JuMP
 using NLPSaUT
+using Test
 
 @testset "Ipopt optim" begin
     f_fitness = function (x::T...) where {T<:Real}
@@ -35,7 +39,7 @@ using NLPSaUT
     model = Model(Ipopt.Optimizer)
     NLPSaUT.build_model!(model, f_fitness, nx, nh, ng, lx, ux, x0;)
     set_optimizer_attribute(model, "tol", 1e-12)
-    set_optimizer_attribute(model, "print_level", 5)
+    set_optimizer_attribute(model, "print_level", 0)
     println(model)
 
     # run optimizer
@@ -43,6 +47,8 @@ using NLPSaUT
     xopt = value.(model[:x])
 
     # checks
-    @assert is_solved_and_feasible(model)
+    @test is_solved_and_feasible(model)
+    @test objective_value(model) ≈ -1.8173927867501094 atol = 1e-11
+    @test value.(model[:x]) ≈ [0.6028876496986725, 2.1808663049092987] atol = 1e-11
 end
 
