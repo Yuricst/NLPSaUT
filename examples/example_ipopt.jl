@@ -11,12 +11,6 @@ using JuMP
 include(joinpath(@__DIR__, "../src/NLPSaUT.jl"))
 
 
-"""
-User-defined fitness function
-
-# Returns:
-	- `Vector`: vector stores [f, h, g] where f is objective, h is equality, and g is inequality constraints
-"""
 function f_fitness(x::T...) where {T<:Real}
 	# objective
     f = x[1]^2 - x[2]
