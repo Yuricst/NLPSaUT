@@ -1,15 +1,5 @@
 """
 Example using NLPSaUT with SNOPT7
-
-# HS71
-Polynomial objective and constraints
-min x1 * x4 * (x1 + x2 + x3) + x3
-st  x1 * x2 * x3 * x4 >= 25
-    x1^2 + x2^2 + x3^2 + x4^2 = 40
-    1 <= x1, x2, x3, x4 <= 5
-
-Initial x = (1,5,5,1)
- (1.000..., 4.743..., 3.821..., 1.379...)
 """
 
 using JuMP

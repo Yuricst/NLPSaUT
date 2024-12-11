@@ -1,6 +1,8 @@
 # NLPSaUT
 
 The `NLPSaUT` module constructs a `JuMP` `model` for a generic nonlinear program (NLP).
+Expected use cases is for solving a differentiable (either analytically or numerically) nonconvex NLP with gradient based algorthms such as Ipopt or SNOPT. 
+
 The user is expected to provide a "fitness function", which evaluates the objective, equality, and inequality constraints. Below is an example: 
 
 ```julia
@@ -44,3 +46,5 @@ julia> Pkg.instantiate()
 ### Examples
 
 For examples, see the `examples` directory.
+
+![Example Solution](examples/contour_ipopt.png)

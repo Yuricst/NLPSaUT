@@ -84,4 +84,7 @@ scatter!(ax, [value(model[:x][1])], [value(model[:x][2])], markersize=5, color=:
 
 xlims!(ax, minimum(xs_grid), maximum(xs_grid))
 ylims!(ax, minimum(ys_grid), maximum(ys_grid))
+
+# save figure
+save(joinpath(@__DIR__, "contour_ipopt.png"), fig)
 display(fig)
