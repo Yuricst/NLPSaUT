@@ -1,107 +1,46 @@
 # NLPSaUT
-Wrapper for constructing NLP model with JuMP
 
-This module provides a wrapper to build a JuMP module around a user-defined NLP problem. 
-Internally, a memoized function for the fitness function is created (see [JuMP Tips and tricks on NLP](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/tips_and_tricks/)). 
-The function must return a fitness vector, which stores the objective, equality constraint(s), and inequality constraint(s), in this order.  
-
-The module supports either appending variables, objectives, and constraints into an existing `JuMP.Model` constructed a priori; if a `JuMP.Model` is not provided, an `Ipopt` based `JuMP.Model` is constructed by default. 
-
-Derivatives are computed using `FiniteDifferences`. 
-
-### Dependencies
-- `JuMP`, `Ipopt`, `FiniteDifferences`
-
-### Examples
-
-Define a fitness function to return the objective, equality constraint(s), and inequality constraint(s):
+The `NLPSaUT` module constructs a `JuMP` `model` for a generic nonlinear program (NLP).
+The user is expected to provide a "fitness function", which evaluates the objective, equality, and inequality constraints. Below is an example: 
 
 ```julia
-function f_fitness(x...)
-    # objective
+function f_fitness(x::T...) where {T<:Real}
+	# compute objective
     f = x[1]^2 - x[2]
     
     # equality constraints
-    h = zeros(1,)
-    h = x[1]^3 + x[2] - 1
+    h = zeros(T, 1)
+    h = x[1]^3 + x[2] - 2.4
 
     # inequality constraints
-    g = zeros(2,)
-    g[1] = x[1]^2 + x[2]^2 - 1
-    g[2] = x[2] - 2
-    
-    fitness = vcat(f,h,g)[:]
-    return fitness
+    g = zeros(T, 2)
+    g[2] = -0.3x[1] + x[2] - 2   # y <= 0.3x + 2
+    g[1] = x[1] + x[2] - 5      # y <= -x + 5
+    return [f; h; g]
 end
 ```
 
-Then, the `NLPSaUT` module may be used as follows:
+The `model` constructed by `NLPSaUT` utilizes `memoization` to economize on the fitness evaluation (see [JuMP Tips and tricks on NLP](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/tips_and_tricks/)). 
 
-```julia
-using JuMP
-using NLPSaUT
+## Quick start
 
-# problem dimensions
-nx = 2                   # number of decision vectors
-nh = 1                   # number of equality constraints
-ng = 2                   # number of inequality constraints
-lx = -10*ones(nx,)
-ux =  10*ones(nx,)
-x0 = [1.2, 0.9]
+1. `git clone` this repository
+2. start julia-repl
+3. activate & instantiate package (first time)
 
-# get model
-x, model = build_model(f_fitness, nx, nh, ng, lx, ux, x0)
-println(model)
-optimize!(model)
-
-# print results
-println(termination_status(model))
-println("Decision vector: ")
-println(value.(x))
-println("Objective: ")
-println(objective_value(model))
+```julia-repl
+pkg> activate .
+julia> using Pkg
+julia> Pkg.instantiate()
 ```
 
-If the derivative method and order is to be specified, replace the above with:
+4. run tests
 
-```julia
-# problem dimensions
-nx = 2                   # number of decision vectors
-nh = 1                   # number of equality constraints
-ng = 2                   # number of inequality constraints
-lx = -10*ones(nx,)
-ux =  10*ones(nx,)
-x0 = [1.2, 0.9]
-
-# get model
-order = 2
-diff_f = "forward"
-x, model = build_model(f_fitness, nx, nh, ng, lx, ux, x0, order, diff_f)
-set_optimizer_attribute(model, "tol", 1e-6)
-set_optimizer_attribute(model, "print_level", 5)
-
-optimize!(model)
+```julia-repl
+(NLPSaUT) pkg> test
 ```
 
-If using a pre-build model, use the mutating version of the function:
 
-```julia
-# build SNOPT7 model
-using SNOPT7
-model = Model(optimizer_with_attributes(SNOPT7.Optimizer, "print_level"=>5, "system_information"=>"yes"))
+### Examples
 
-# problem dimensions
-nx = 2                   # number of decision vectors
-nh = 1                   # number of equality constraints
-ng = 2                   # number of inequality constraints
-lx = -10*ones(nx,)
-ux =  10*ones(nx,)
-x0 = [1.2, 0.9]
-
-# get model
-order = 2
-diff_f = "forward"
-x = build_model!(model, f_fitness, nx, nh, ng, lx, ux, x0, order, diff_f)
-
-optimize!(model)
-```
+For examples, see the `examples` directory.
