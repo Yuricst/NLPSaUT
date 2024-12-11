@@ -35,8 +35,8 @@ The `model` constructed by `NLPSaUT` utilizes `memoization` to economize on the 
 
 ```julia-repl
 pkg> activate .
-julia> using Pkg
-julia> Pkg.instantiate()
+julia> using Pkg                # first time only
+julia> Pkg.instantiate()        # first time only
 ```
 
 4. run tests
