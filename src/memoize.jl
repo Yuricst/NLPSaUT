@@ -41,33 +41,33 @@ function memoize_fitness_gradient(
     nfitness::Int, 
     order::Int=2
 )
-	diff_f = "forward"
-    return memoize_fitness_gradient(f_fitness, nx, nfitness, diff_f, order)
+	fd_type = "forward"
+    return memoize_fitness_gradient(f_fitness, nx, nfitness, fd_type, order)
 end
 
 
 
 """
-    memoize_fitness_gradient(f_fitness::Function, nfitness::Int, diff_f::Function, order::Int=2)
+    memoize_fitness_gradient(f_fitness::Function, nfitness::Int, fd_type::Function, order::Int=2)
 
-Create memoized gradient computation with method specified by `diff_f`
-    - `diff_f = "forward"` use `FiniteDifferences.forward_fdm()`
-    - `diff_f = "central"` use `FiniteDifferences.central_fdm()`
-    - `diff_f = "backward"` use `FiniteDifferences.backward_fdm()`
+Create memoized gradient computation with method specified by `fd_type`
+    - `fd_type = "forward"` use `FiniteDifferences.forward_fdm()`
+    - `fd_type = "central"` use `FiniteDifferences.central_fdm()`
+    - `fd_type = "backward"` use `FiniteDifferences.backward_fdm()`
 """
 function memoize_fitness_gradient(
     f_fitness::Function, 
     nx::Int, 
     nfitness::Int, 
-    diff_f::String, 
-    order::Int=2
+    fd_type::String = "forward", 
+    order::Int = 2
 )
 	# create memoized version
 	f_fitness_nosplat(x) = f_fitness(x...)
     last_x, last_f = ones(nx), zeros(nx,nfitness)
 
     # Memoized function for gradient and jacobians
-    if cmp(diff_f, "forward")==0
+    if cmp(fd_type, "forward")==0
         
         function foo_fwd(i::Int, df::AbstractVector{T}, x...) where {T} #::T...)# where {T<:Real}
             if x != last_x
@@ -81,7 +81,7 @@ function memoize_fitness_gradient(
         end
         return [(df, x...) -> foo_fwd(i, df, x...) for i in 1:nfitness]
 
-    elseif cmp(diff_f, "central")==0
+    elseif cmp(fd_type, "central")==0
 
         function foo_cent(i::Int, df::AbstractVector{T}, x...) where {T} #::T...)# where {T<:Real}
             if x != last_x
@@ -95,7 +95,7 @@ function memoize_fitness_gradient(
         end
         return [(df, x...) -> foo_cent(i, df, x...) for i in 1:nfitness]
 
-    elseif cmp(diff_f, "backward")==0
+    elseif cmp(fd_type, "backward")==0
 
         function foo_bck(i::Int, df::AbstractVector{T}, x...) where {T} #::T...)# where {T<:Real}
             if x != last_x

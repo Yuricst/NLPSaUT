@@ -5,6 +5,7 @@ Wrapper to construct JuMP model for NLPs
 """
 module NLPSaUT
 
+    import FiniteDifferences
     using Ipopt
     using JuMP
 
