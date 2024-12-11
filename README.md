@@ -1,9 +1,9 @@
 # NLPSaUT
 
 The `NLPSaUT` module constructs a `JuMP` `model` for a generic nonlinear program (NLP).
-Expected use cases is for solving a differentiable (either analytically or numerically) nonconvex NLP with gradient based algorthms such as Ipopt or SNOPT. 
+The expected use case is solving a differentiable (either analytically or numerically) nonconvex NLP with gradient-based algorithms such as Ipopt or SNOPT. 
 
-The user is expected to provide a "fitness function", which evaluates the objective, equality, and inequality constraints. Below is an example: 
+The user is expected to provide a "fitness function" ([pygmo](https://github.com/esa/pygmo2)-style), which evaluates the objective, equality, and inequality constraints. Below is an example: 
 
 ```julia
 function f_fitness(x::T...) where {T<:Real}
