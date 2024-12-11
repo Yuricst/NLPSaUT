@@ -40,8 +40,8 @@ function build_model(
 )
 	# Construct JuMP model
 	model = Model(Ipopt.Optimizer)
-	x = build_model!(model, f_fitness, nx, nh, ng, lx, ux, x0, order, diff_f, verbose)
-	return x, model
+	build_model!(model, f_fitness, nx, nh, ng, lx, ux, x0; order = order, diff_f = diff_f)
+	return model
 end
 
 
@@ -78,69 +78,52 @@ function build_model!(
 	ng::Int,
 	lx::Vector,
 	ux::Vector,
-	x0::Vector,
+	x0::Vector;
 	order::Int=2,
 	diff_f::String="forward",
-	verbose::Bool=false,
 )
-
-	# =nothing, diff_f::Function=nothing, order::Int=2)
-
 	# number of fitness variables
 	nfitness = 1 + nh + ng
 
-	## get functions
-	if verbose
-		println("Generating memoized functions...")
-	end
-	memoized_fitness  = memoize_fitness(f_fitness, nx, nfitness)
-	if isnothing(diff_f) == true
-		∇memoized_fitness = memoize_fitness_gradient(f_fitness, nx, nfitness, order)
-	else
-		∇memoized_fitness = memoize_fitness_gradient(f_fitness, nx, nfitness, diff_f, order)
-	end
+	# get memoized fitness function
+	memoized_fitness = memoize_fitness(f_fitness, nx, nfitness)
+	# if isnothing(diff_f) == true
+	# 	∇memoized_fitness = memoize_fitness_gradient(f_fitness, nx, nfitness, order)
+	# else
+	# 	∇memoized_fitness = memoize_fitness_gradient(f_fitness, nx, nfitness, diff_f, order)
+	# end
 
 	# set variables
 	if isnothing(x0) == true
 		x0 = ones(nx,)
 	end
-	@variable(model, lx[i] <= x[i=keys(lx)] <= ux[i], start = x0[i])
-
-	# set functions
-	hs = [Symbol("h"*string(idx)) for idx = 1:nh]
-	gs = [Symbol("g"*string(idx)) for idx = 1:ng]
+	@variable(model, lx[i] <= x[i in 1:nx] <= ux[i], start = x0[i])
 
 	# register NLP function
-	if verbose
-		println("Registering nonlinear function...")
-	end
-	register(model, :f,  nx, memoized_fitness[1], ∇memoized_fitness[1])
+	@operator(model, fobj, nx, memoized_fitness[1])
+	@objective(model, Min, fobj(x...))
 
 	# append equality constraints
-	if verbose
-		println("Appending  objective & constraints to model...")
+	for i in 1:nh
+		op = add_nonlinear_operator(
+			model,
+			nx,
+			memoized_fitness[1+i];
+			name = Symbol("op_h_$i"),		# need to explicitly define unique name!
+		)
+		@constraint(model, op(x...) == 0)
 	end
-	for ih = 1:nh
-	    register(model, hs[ih], nx, memoized_fitness[1+ih], ∇memoized_fitness[1+ih])
-	end
-
+	
 	# append inequality constraints
-	for ig = 1:ng
-	    register(model, gs[ig], nx, memoized_fitness[1+nh+ig], ∇memoized_fitness[1+nh+ig])
+	for i in 1:ng
+		op = add_nonlinear_operator(
+			model,
+			nx,
+			memoized_fitness[1+nh+i];
+			name = Symbol("op_g_$i"),		# need to explicitly define unique name!
+		)
+		@constraint(model, op(x...) <= 0)
 	end
-
-	# append objective
-	@NLobjective(model, Min, f(x...))
-
-	# append equality constraints
-	append_hs!(model, x, nh)
-
-	# append equality constraints
-	append_gs!(model, x, ng)
-	if verbose
-		println("Model ready!")
-	end
-	return x
-
+	return
 end
 

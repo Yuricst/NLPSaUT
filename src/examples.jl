@@ -42,7 +42,7 @@ function test_ipopt(maxiter=50, verbose=true)
 
 	# run optimizer
 	optimize!(model)
-
+	
 	# print results
 	println(termination_status(model))
 	println("Decision vector: ")

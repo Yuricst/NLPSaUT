@@ -11,8 +11,8 @@ Because `foo_i` is auto-differentiated with ForwardDiff, our cache needs to
 work when `x` is a `Float64` and a `ForwardDiff.Dual`.
 """
 function memoize_fitness(f_fitness::Function, nx::Int, n_outputs::Int)
-    last_x, last_f = ones(nx), ones(n_outputs)
-    last_dx, last_dfdx = ones(nx), ones(nx)
+    last_x, last_f = nothing, nothing
+    last_dx, last_dfdx = nothing, nothing
     function f_fitness_i(i::Int, x::T...) where {T<:Real}
         if T == Float64
             if x != last_x
