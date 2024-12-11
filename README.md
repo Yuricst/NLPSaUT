@@ -42,8 +42,12 @@ julia> Pkg.instantiate()
 (NLPSaUT) pkg> test
 ```
 
+### Note
 
-### Examples
+- To use with SNOPT, it's probably better to go through [`GAMS.jl`](https://github.com/GAMS-dev/gams.jl?tab=readme-ov-file) rather than to use [`SNOPT7.jl`](https://github.com/snopt/SNOPT7.jl) directly
+
+
+## Examples
 
 For examples, see the `examples` directory.
 
