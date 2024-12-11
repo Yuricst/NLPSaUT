@@ -31,23 +31,6 @@ end
 
 
 """
-    memoize_fitness_gradient(f_fitness::Function, n_outputs::Int, nx::Int)
-
-Create memoized gradient computation with FiniteDifferences.forward_fdm()
-"""
-function memoize_fitness_gradient(
-    f_fitness::Function, 
-    nx::Int, 
-    nfitness::Int, 
-    order::Int=2
-)
-	fd_type = "forward"
-    return memoize_fitness_gradient(f_fitness, nx, nfitness, fd_type, order)
-end
-
-
-
-"""
     memoize_fitness_gradient(f_fitness::Function, nfitness::Int, fd_type::Function, order::Int=2)
 
 Create memoized gradient computation with method specified by `fd_type`
@@ -64,12 +47,12 @@ function memoize_fitness_gradient(
 )
 	# create memoized version
 	f_fitness_nosplat(x) = f_fitness(x...)
-    last_x, last_f = ones(nx), zeros(nx,nfitness)
+    last_x, last_f = nothing, nothing #ones(nx), zeros(nx,nfitness)
 
     # Memoized function for gradient and jacobians
     if cmp(fd_type, "forward")==0
         
-        function foo_fwd(i::Int, df::AbstractVector{T}, x...) where {T} #::T...)# where {T<:Real}
+        function foo_fwd(i::Int, df::AbstractVector{T}, x...) where {T<:Real}
             if x != last_x
                 # update
                 last_x = x
@@ -83,7 +66,7 @@ function memoize_fitness_gradient(
 
     elseif cmp(fd_type, "central")==0
 
-        function foo_cent(i::Int, df::AbstractVector{T}, x...) where {T} #::T...)# where {T<:Real}
+        function foo_cent(i::Int, df::AbstractVector{T}, x...) where {T<:Real}
             if x != last_x
                 # update
                 last_x = x
@@ -97,7 +80,7 @@ function memoize_fitness_gradient(
 
     elseif cmp(fd_type, "backward")==0
 
-        function foo_bck(i::Int, df::AbstractVector{T}, x...) where {T} #::T...)# where {T<:Real}
+        function foo_bck(i::Int, df::AbstractVector{T}, x...) where {T<:Real}
             if x != last_x
                 # update
                 last_x = x
