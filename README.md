@@ -22,6 +22,8 @@ function f_fitness(x::T...) where {T<:Real}
 end
 ```
 
+Derivatives of `f_fitness` is taken using `ForwardDiff.jl` (which is the default `JuMP` behavior according to its [docs](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/operator_ad/#Gradient)); as such, `f_fitness` should be written in a way that is compatiable to `ForwardDiff.jl`. 
+
 The `model` constructed by `NLPSaUT` utilizes `memoization` to economize on the fitness evaluation (see [JuMP Tips and tricks on NLP](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/tips_and_tricks/)). 
 
 ## Quick start
@@ -52,3 +54,15 @@ julia> Pkg.instantiate()
 For examples, see the `examples` directory.
 
 ![Example Solution](examples/contour_ipopt.png)
+
+
+## TODO notes
+
+- Development
+    - [ ] Finite difference gradient option
+    - [ ] Analytical gradient option
+
+- Examples
+    - [x] Simple example with Ipopt
+    - [ ] Simple example with SNOPT via GAMS
+    - [ ] Example with astrodynamics (e.g. Lambert problem)
