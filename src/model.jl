@@ -6,25 +6,19 @@ Building model
 """
 	build_model(f_fitness::Function, nx::Int, nh::Int, ng::Int, lx::Vector, ux::Vector, x0::Vector=nothing, diff_f::Function=nothing, order::Int=2)
 
-Build model for NLP problem. 
+Build model for NLP problem with memoized fitness function.
 
 # Arguments:
-	- `f_fitness::Function`: fitness function, returning [f, h, g]
-	- `nx::Int`: number of decision variables 
-	- `nh::Int`: number of equality constraints 
-	- `ng::Int`: number of inequality constraints 
-	- `lx::Vector`: lower bounds on decision variables 
-	- `ux::Vector`: upper bounds on decision variables 
-	- `x0::Vector`: initial guess
-	- `order::Int`: order of FiniteDifferences, minimum is 2
-	- `diff_f::String`: finite-difference method, "forward", "backward", or "central"
-
-# Returns
-	- `tuple`: JuMP variables and JuMP model
-
-# Example
-	x, model = build_model(f_fitness, nx, nh, ng, lx, ux, x0)
-
+- `optimizer`: optimizer to use with the model
+- `f_fitness::Function`: fitness function, returning [f, h, g]
+- `nx::Int`: number of decision variables 
+- `nh::Int`: number of equality constraints 
+- `ng::Int`: number of inequality constraints 
+- `lx::Vector`: lower bounds on decision variables 
+- `ux::Vector`: upper bounds on decision variables 
+- `x0::Vector`: initial guess
+- `order::Int`: order of FiniteDifferences, minimum is 2
+- `diff_f::String`: finite-difference method, "forward", "backward", or "central"
 """
 function build_model(
 	optimizer,
@@ -49,7 +43,7 @@ end
 """
 	build_model!(model::JuMP.Model, f_fitness::Function, nx::Int, nh::Int, ng::Int, lx::Vector, ux::Vector, x0::Vector=nothing)
 
-Extend model for NLP problem. 
+Extend model for NLP problem via memoized fitness function.
 
 # Arguments:
 	- `model::JuMP.Model`: model to append objective and constraints
@@ -62,13 +56,6 @@ Extend model for NLP problem.
 	- `x0::Vector`: initial guess
 	- `order::Int`: order of FiniteDifferences, minimum is 2
 	- `diff_f::String`: finite-difference method, "forward", "backward", or "central"
-
-# Returns
-	- `tuple`: JuMP variables and JuMP model
-
-# Example
-	x, model = build_model(f_fitness, nx, nh, ng, lx, ux, x0)
-
 """
 function build_model!(
 	model::JuMP.Model,

@@ -4,9 +4,9 @@ NLPSaUT.jl
 Wrapper to construct JuMP model for NLPs
 """
 module NLPSaUT
-    using JuMP
+
     using Ipopt
-    import FiniteDifferences
+    using JuMP
 
     # functions to build model
     include("memoize.jl")
@@ -16,4 +16,5 @@ module NLPSaUT
     # export functions
     export memoize_fitness, memoize_fitness_gradient
     export build_model, build_model!
+
 end
