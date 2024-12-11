@@ -7,7 +7,7 @@ The user is expected to provide a "fitness function", which evaluates the object
 
 ```julia
 function f_fitness(x::T...) where {T<:Real}
-	# compute objective
+    # compute objective
     f = x[1]^2 - x[2]
     
     # equality constraints
