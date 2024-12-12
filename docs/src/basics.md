@@ -148,7 +148,7 @@ Mathematically (with a bit of abuse of notation), this can be written as
 \end{aligned}
 ```
 
-where ``r(0.9P)`` and ``v(0.9P)`` is the position and velocity at time ``t = 0.9P``, obtained by solving the initial value problem
+where ``r(0.9P)`` and ``v(0.9P)`` are the position and velocity vectors at time ``t = 0.9P``, obtained by solving the initial value problem
 
 ```math
 \begin{aligned}
@@ -208,12 +208,7 @@ params_ode = [μ,]
 We will now define a conveninence method for propagating the trajectory - this will be used inside the fitness function, as well as for plotting later on:
 
 ```julia
-base_ode_problem = ODEProblem(
-    cr3bp_rhs!,
-    rv0,
-    tspan,
-    params_ode,
-)
+base_ode_problem = ODEProblem(cr3bp_rhs!, rv0, tspan, params_ode)
 
 function get_trajectory(DV::T...) where {T<:Real}
     ode_problem = remake(base_ode_problem; u0 = rv0 + [0; 0; 0; DV...])

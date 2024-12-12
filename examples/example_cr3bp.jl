@@ -40,12 +40,7 @@ tspan = [0.0, 0.9*period_0]
 params_ode = [μ,]
 
 # define convenience method for propagating trajectories
-base_ode_problem = ODEProblem(
-    cr3bp_rhs!,
-    rv0,
-    tspan,
-    params_ode,
-)
+base_ode_problem = ODEProblem(cr3bp_rhs!, rv0, tspan, params_ode)
 
 function get_trajectory(DV::T...) where {T<:Real}
     ode_problem = remake(base_ode_problem; u0 = rv0 + [0; 0; 0; DV...])
