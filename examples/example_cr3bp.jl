@@ -47,19 +47,16 @@ lx = -0.5 * ones(nx,)
 ux =  0.5 * ones(nx,)
 x0 = [0.0, 0.0, 0.0]
 
+base_ode_problem = ODEProblem(
+    cr3bp_rhs!,
+    rv0,
+    tspan,
+    params_ode,
+)
+
 function get_trajectory(DV::T...) where {T<:Real}
-    ode_problem = ODEProblem(
-        cr3bp_rhs!,
-        rv0 + [0; 0; 0; DV...],
-        tspan,
-        params_ode,
-    )
-    sol = solve(
-        ode_problem,
-        Tsit5();
-        reltol = 1e-12,
-        abstol = 1e-12
-    )
+    ode_problem = remake(base_ode_problem; u0 = rv0 + [0; 0; 0; DV...])
+    sol = solve(ode_problem, Tsit5(); reltol = 1e-12, abstol = 1e-12)
     return sol
 end
 
@@ -71,13 +68,10 @@ function f_fitness(DV::T...) where {T<:Real}
     xf = sol.u[end]
     
 	# objective
-    f = norm(DV) + norm(rv0[4:6] - xf[4:6])
+    f = norm(DV) #+ norm(rv0[4:6] - xf[4:6])
     
     # equality constraints for final state
-    h = zeros(T, 3)
-    h[1] = rv0[1] - xf[1]
-    h[2] = rv0[2] - xf[2]
-    h[3] = rv0[3] - xf[3]
+    h = rv0[1:3] - xf[1:3]
     return [f; h]
 end
 

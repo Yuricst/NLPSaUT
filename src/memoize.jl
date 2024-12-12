@@ -23,9 +23,10 @@ function memoize_fitness(f_fitness::Function, n_outputs::Int)
             end
             return last_f[i]::T
         else
-            # if x != last_dx       # uncommenting this makes it buggy with ODEProblem...
+            # extra type check added (instead of just `if x != last_dx`) to prevent bug with ODEProblem
+            if (x != last_dx) || (typeof(x) != typeof(last_dx))
                 last_dx, last_dfdx = x, f_fitness(x...)
-            # end
+            end
             return last_dfdx[i]::T
         end
     end

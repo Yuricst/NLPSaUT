@@ -40,7 +40,7 @@ x0 = [-1.2, 10]
 # get model
 order = 2
 diff_f = "forward"
-model = NLPSaUT.build_model(Ipopt.Optimizer, f_fitness, nx, nh, ng, lx, ux, x0; auto_diff = false)
+model = NLPSaUT.build_model(Ipopt.Optimizer, f_fitness, nx, nh, ng, lx, ux, x0;)# auto_diff = false)
 set_optimizer_attribute(model, "tol", 1e-12)
 set_optimizer_attribute(model, "print_level", 5)
 println(model)
