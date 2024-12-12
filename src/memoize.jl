@@ -13,18 +13,18 @@ work when `x` is a `Float64` and a `ForwardDiff.Dual`.
 See: 
 https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/tips_and_tricks/#Memoization
 """
-function memoize_fitness(f_fitness::Function, n_outputs::Int)
+function memoize_fitness(f_fitness::Function, n_outputs::Int; disable::Bool = false)
     last_x, last_f = nothing, nothing
     last_dx, last_dfdx = nothing, nothing
     function f_fitness_i(i::Int, x::T...) where {T<:Real}
         if T == Float64
-            if x != last_x
+            if (x != last_x) || (disable == true)
                 last_x, last_f = x, f_fitness(x...)
             end
             return last_f[i]::T
         else
             # extra type check added (instead of just `if x != last_dx`) to prevent bug with ODEProblem
-            if (x != last_dx) || (typeof(x) != typeof(last_dx))
+            if (x != last_dx) || (typeof(x) != typeof(last_dx)) || (disable == true)
                 last_dx, last_dfdx = x, f_fitness(x...)
             end
             return last_dfdx[i]::T

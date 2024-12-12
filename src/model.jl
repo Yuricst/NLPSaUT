@@ -31,12 +31,14 @@ function build_model(
 	ux::Vector, 
 	x0::Vector;
 	auto_diff::Bool = true,
-	order::Int=2, 
-	fd_type::String="forward",
+	order::Int = 2, 
+	fd_type::String = "forward",
+	disable_memoize::Bool = false,
 )
 	# Construct JuMP model
 	model = Model(optimizer)
-	build_model!(model, f_fitness, nx, nh, ng, lx, ux, x0; auto_diff = auto_diff, order = order, fd_type = fd_type)
+	build_model!(model, f_fitness, nx, nh, ng, lx, ux, x0;
+		auto_diff = auto_diff, order = order, fd_type = fd_type, disable_memoize = disable_memoize)
 	return model
 end
 
@@ -72,12 +74,13 @@ function build_model!(
 	auto_diff::Bool = true,
 	order::Int = 2,
 	fd_type::String = "forward",
+	disable_memoize::Bool = false,
 )
 	# number of fitness variables
 	nfitness = 1 + nh + ng
 
 	# get memoized fitness function
-	memoized_fitness = memoize_fitness(f_fitness, nfitness)
+	memoized_fitness = memoize_fitness(f_fitness, nfitness; disable=disable_memoize)
 	if auto_diff == false
 		∇memoized_fitness = memoize_fitness_gradient(f_fitness, nfitness, fd_type, order)
 	end

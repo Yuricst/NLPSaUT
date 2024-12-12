@@ -81,7 +81,7 @@ fitness_init = f_fitness(0.0, 0.0, 0.0)
 # get model
 order = 2
 diff_f = "forward"
-model = NLPSaUT.build_model(Ipopt.Optimizer, f_fitness, nx, nh, ng, lx, ux, x0; auto_diff = true)
+model = NLPSaUT.build_model(Ipopt.Optimizer, f_fitness, nx, nh, ng, lx, ux, x0; disable_memoize = false)
 set_optimizer_attribute(model, "tol", 1e-12)
 set_optimizer_attribute(model, "print_level", 5)
 println(model)
