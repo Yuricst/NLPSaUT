@@ -220,12 +220,12 @@ end
 We are now ready to define our problem dimension & fitness function
 
 ```julia
-nx = 3
-nh = 3
-ng = 0
-lx = -0.5 * ones(nx,)
-ux =  0.5 * ones(nx,)
-x0 = [0.0, 0.0, 0.0]
+nx = 3                   # number of decision vectors
+nh = 3                   # number of equality constraints
+ng = 0                   # number of inequality constraints
+lx = -0.5 * ones(nx,)    # lower bounds on decision variables
+ux =  0.5 * ones(nx,)    # upper bounds on decision variables
+x0 = [0.0, 0.0, 0.0]     # initial guess
 
 function f_fitness(DV::T...) where {T<:Real}
     # integrate trajectory
@@ -234,7 +234,7 @@ function f_fitness(DV::T...) where {T<:Real}
     # final state deviation
     xf = sol.u[end]
     
-	# objective
+    # objective
     f = norm(DV) + norm(rv0[4:6] - xf[4:6])
     
     # equality constraints for final state
@@ -243,23 +243,15 @@ function f_fitness(DV::T...) where {T<:Real}
 end
 ```
 
-Let's solve it!
+Let's build the JuMP model and solve it!
 
 ```julia
-
-# get model
-order = 2
-diff_f = "forward"
-model = NLPSaUT.build_model(Ipopt.Optimizer, f_fitness, nx, nh, ng, lx, ux, x0; disable_memoize = false)
+model = NLPSaUT.build_model(Ipopt.Optimizer, f_fitness, nx, nh, ng, lx, ux, x0)
 set_optimizer_attribute(model, "tol", 1e-12)
 set_optimizer_attribute(model, "print_level", 5)
-println(model)
 
-# run optimizer
 optimize!(model)
 xopt = value.(model[:x])
-
-# checks
 @assert is_solved_and_feasible(model)
 ```
 

@@ -21,7 +21,7 @@ julia> using Pkg                # first time only
 julia> Pkg.instantiate()        # first time only
 ```
 
-4. run tests
+### Tests
 
 ```julia-repl
 (NLPSaUT) pkg> test
