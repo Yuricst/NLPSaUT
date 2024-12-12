@@ -15,9 +15,9 @@ makedocs(
     # options
     pages = [
 		"Home" => "index.md",
-        # "Tutorials" => Any[
-        #     "Basics" => "basics.md",
-        # ],
+        "Tutorials" => Any[
+            "Basics" => "basics.md",
+        ],
 		"API" => Any[
 			"Core" => "api_core.md",
 		],

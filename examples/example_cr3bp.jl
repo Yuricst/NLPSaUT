@@ -39,14 +39,7 @@ tspan = [0.0, 0.9*period_0]
 μ = 1.215058560962404e-02
 params_ode = [μ,]
 
-# problem dimensions
-nx = 3
-nh = 3
-ng = 0
-lx = -0.5 * ones(nx,)
-ux =  0.5 * ones(nx,)
-x0 = [0.0, 0.0, 0.0]
-
+# define convenience method for propagating trajectories
 base_ode_problem = ODEProblem(
     cr3bp_rhs!,
     rv0,
@@ -60,15 +53,23 @@ function get_trajectory(DV::T...) where {T<:Real}
     return sol
 end
 
+# problem dimensions
+nx = 3
+nh = 3
+ng = 0
+lx = -0.5 * ones(nx,)
+ux =  0.5 * ones(nx,)
+x0 = [0.0, 0.0, 0.0]
+
 function f_fitness(DV::T...) where {T<:Real}
     # integrate trajectory
-    sol = get_trajectory(DV)
+    sol = get_trajectory(DV...)
 
     # final state deviation
     xf = sol.u[end]
     
 	# objective
-    f = norm(DV) #+ norm(rv0[4:6] - xf[4:6])
+    f = norm(DV) + norm(rv0[4:6] - xf[4:6])
     
     # equality constraints for final state
     h = rv0[1:3] - xf[1:3]
@@ -94,10 +95,10 @@ xopt = value.(model[:x])
 @assert is_solved_and_feasible(model)
 
 # plot
-sol_initialguess = get_trajectory(x0)
-sol_optimal = get_trajectory(xopt)
+sol_initialguess = get_trajectory(x0...)
+sol_optimal = get_trajectory(xopt...)
 
-fig = Figure(size=(500,500))
+fig = Figure(size=(400,500))
 ax = Axis3(fig[1,1]; aspect = :data, xlabel = "x", ylabel = "y", zlabel = "z")
 scatter!(ax, [rv0[1]], [rv0[2]], [rv0[3]], markersize = 10, color = :red)
 lines!(ax, Array(sol_initialguess)[1,:], Array(sol_initialguess)[2,:], Array(sol_initialguess)[3,:],
@@ -105,4 +106,6 @@ lines!(ax, Array(sol_initialguess)[1,:], Array(sol_initialguess)[2,:], Array(sol
 lines!(ax, Array(sol_optimal)[1,:], Array(sol_optimal)[2,:], Array(sol_optimal)[3,:],
        color = :red, label="Optimal two-impulse phasing trajectory")
 axislegend(ax)
+
+save(joinpath(@__DIR__, "example_cr3bp.png"), fig)
 display(fig)

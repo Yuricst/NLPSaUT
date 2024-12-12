@@ -21,8 +21,8 @@ function f_fitness(x::T...) where {T<:Real}
 
     # inequality constraints
     g = zeros(T, 2)
-    g[2] = -0.3x[1] + x[2] - 2   # y <= 0.3x + 2
     g[1] = x[1] + x[2] - 5      # y <= -x + 5
+    g[2] = -0.3x[1] + x[2] - 2   # y <= 0.3x + 2
     return [f; h; g]
 end
 
@@ -33,13 +33,11 @@ end
 nx = 2                   # number of decision vectors
 nh = 1                   # number of equality constraints
 ng = 2                   # number of inequality constraints
-lx = -10*ones(nx,)
-ux =  10*ones(nx,)
-x0 = [-1.2, 10]
+lx = -10*ones(nx,)       # lower bounds on decision variables
+ux =  10*ones(nx,)       # upper bounds on decision variables
+x0 = [-1.2, 10]          # initial guess
 
 # get model
-order = 2
-diff_f = "forward"
 model = NLPSaUT.build_model(Ipopt.Optimizer, f_fitness, nx, nh, ng, lx, ux, x0;)# auto_diff = false)
 set_optimizer_attribute(model, "tol", 1e-12)
 set_optimizer_attribute(model, "print_level", 5)

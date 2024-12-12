@@ -25,3 +25,6 @@ Manifest.toml
 
 # fortran snopt config files
 fort*.*
+
+# Mac tmp file
+.DS_Store
