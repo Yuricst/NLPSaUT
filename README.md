@@ -1,5 +1,7 @@
 # NLPSaUT
 
+📚[Read the docs here!](https://yuricst.github.io/NLPSaUT/)📚
+
 The `NLPSaUT` module constructs a `JuMP` `model` for a generic nonlinear program (NLP).
 The expected use case is solving a differentiable (either analytically or numerically) nonconvex NLP with gradient-based algorithms such as Ipopt or SNOPT. 
 
