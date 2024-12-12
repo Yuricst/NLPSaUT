@@ -9,8 +9,11 @@ Memoize functions for fitness evaluation
 Memoize fitness function. 
 Because `foo_i` is auto-differentiated with ForwardDiff, our cache needs to
 work when `x` is a `Float64` and a `ForwardDiff.Dual`.
+
+See: 
+https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/tips_and_tricks/#Memoization
 """
-function memoize_fitness(f_fitness::Function, nx::Int, n_outputs::Int)
+function memoize_fitness(f_fitness::Function, n_outputs::Int)
     last_x, last_f = nothing, nothing
     last_dx, last_dfdx = nothing, nothing
     function f_fitness_i(i::Int, x::T...) where {T<:Real}
@@ -20,9 +23,9 @@ function memoize_fitness(f_fitness::Function, nx::Int, n_outputs::Int)
             end
             return last_f[i]::T
         else
-            if x != last_dx
+            # if x != last_dx       # uncommenting this makes it buggy with ODEProblem...
                 last_dx, last_dfdx = x, f_fitness(x...)
-            end
+            # end
             return last_dfdx[i]::T
         end
     end
@@ -39,20 +42,18 @@ Create memoized gradient computation with method specified by `fd_type`
     - `fd_type = "backward"` use `FiniteDifferences.backward_fdm()`
 """
 function memoize_fitness_gradient(
-    f_fitness::Function, 
-    nx::Int, 
+    f_fitness::Function,
     nfitness::Int, 
     fd_type::String = "forward", 
     order::Int = 2
 )
-	# create memoized version
+	# create fitness function alias with no splatting for FiniteDifferences.jacobian
 	f_fitness_nosplat(x) = f_fitness(x...)
-    last_x, last_f = nothing, nothing #ones(nx), zeros(nx,nfitness)
+    last_x, last_f = nothing, nothing
 
     # Memoized function for gradient and jacobians
     if cmp(fd_type, "forward")==0
-        
-        function foo_fwd(i::Int, df::AbstractVector{T}, x...) where {T<:Real}
+        function foo_fwd(i::Int, df::AbstractVector{T}, x::T...)::Nothing where {T<:Real}
             if x != last_x
                 # update
                 last_x = x
@@ -66,7 +67,7 @@ function memoize_fitness_gradient(
 
     elseif cmp(fd_type, "central")==0
 
-        function foo_cent(i::Int, df::AbstractVector{T}, x...) where {T<:Real}
+        function foo_cent(i::Int, df::AbstractVector{T}, x::T...)::Nothing where {T<:Real}
             if x != last_x
                 # update
                 last_x = x
@@ -80,7 +81,7 @@ function memoize_fitness_gradient(
 
     elseif cmp(fd_type, "backward")==0
 
-        function foo_bck(i::Int, df::AbstractVector{T}, x...) where {T<:Real}
+        function foo_bck(i::Int, df::AbstractVector{T}, x::T...)::Nothing where {T<:Real}
             if x != last_x
                 # update
                 last_x = x

@@ -22,7 +22,7 @@ function f_fitness(x::T...) where {T<:Real}
 end
 ```
 
-Derivatives of `f_fitness` is taken using `ForwardDiff.jl` (which is the default `JuMP` behavior according to its [docs](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/operator_ad/#Gradient)); as such, `f_fitness` should be written in a way that is compatiable to `ForwardDiff.jl`. 
+Derivatives of `f_fitness` is taken using `ForwardDiff.jl` (which is the default `JuMP` behavior according to its [docs](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/operator_ad/#Gradient)); as such, `f_fitness` should be written in a way that is compatiable to `ForwardDiff.jl` ([read here as to why it is `ForwardDiff`, not `ReverseDiff`](https://jump.dev/JuMP.jl/stable/manual/nonlinear/#Automatic-differentiation-2)). 
 For reference, here's the [JuMP docs page on common mistakes when using `ForwardDiff.jl`](https://jump.dev/JuMP.jl/stable/manual/nonlinear/#Common-mistakes-when-writing-a-user-defined-operator). 
 
 The `model` constructed by `NLPSaUT` utilizes `memoization` to economize on the fitness evaluation (see [JuMP Tips and tricks on NLP](https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/tips_and_tricks/)). 

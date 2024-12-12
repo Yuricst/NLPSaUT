@@ -77,9 +77,9 @@ function build_model!(
 	nfitness = 1 + nh + ng
 
 	# get memoized fitness function
-	memoized_fitness = memoize_fitness(f_fitness, nx, nfitness)
+	memoized_fitness = memoize_fitness(f_fitness, nfitness)
 	if auto_diff == false
-		∇memoized_fitness = memoize_fitness_gradient(f_fitness, nx, nfitness, fd_type, order)
+		∇memoized_fitness = memoize_fitness_gradient(f_fitness, nfitness, fd_type, order)
 	end
 
 	# set variables
@@ -98,23 +98,43 @@ function build_model!(
 
 	# append equality constraints
 	for i in 1:nh
-		op = add_nonlinear_operator(
-			model,
-			nx,
-			memoized_fitness[1+i];
-			name = Symbol("op_h_$i"),		# need to explicitly define unique name!
-		)
+		if auto_diff
+			op = add_nonlinear_operator(
+				model,
+				nx,
+				memoized_fitness[1+i];
+				name = Symbol("op_h_$i"),		# need to explicitly define unique name!
+			)
+		else
+			op = add_nonlinear_operator(
+				model,
+				nx,
+				memoized_fitness[1+i],
+				∇memoized_fitness[1+i];
+				name = Symbol("op_h_$i"),		# need to explicitly define unique name!
+			)
+		end
 		@constraint(model, op(x...) == 0)
 	end
 	
 	# append inequality constraints
 	for i in 1:ng
-		op = add_nonlinear_operator(
-			model,
-			nx,
-			memoized_fitness[1+nh+i];
-			name = Symbol("op_g_$i"),		# need to explicitly define unique name!
-		)
+		if auto_diff
+			op = add_nonlinear_operator(
+				model,
+				nx,
+				memoized_fitness[1+nh+i];
+				name = Symbol("op_g_$i"),		# need to explicitly define unique name!
+			)
+		else
+			op = add_nonlinear_operator(
+				model,
+				nx,
+				memoized_fitness[1+nh+i],
+				∇memoized_fitness[1+nh+i];
+				name = Symbol("op_g_$i"),		# need to explicitly define unique name!
+			)
+		end
 		@constraint(model, op(x...) <= 0)
 	end
 	return
