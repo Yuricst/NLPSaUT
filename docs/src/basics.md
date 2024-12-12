@@ -131,7 +131,7 @@ display(fig)
 ![contour_basics](contour_basics.png)
 
 
-## Fitness function with an `ODEProblem` inside
+## Fitness function with an `ODEProblem`
 
 Let us now consider a trajectory design problem, where we need to integrate some dynamics. 
 Specifically, we will consider the design of a phasing trajectory along a halo orbit with two impulses in the CR3BP dynamics. 
@@ -154,7 +154,7 @@ where ``r(0.9P)`` and ``v(0.9P)`` are the position and velocity vectors at time 
 \begin{aligned}
 \dot{r} &= v
 \\
-\dot{v} &= -\dfrac{1-\mu}{\|r_1\|^3}r_1 - \dfrac{\mu}{\|r_2\|^3}r_2 - \omega \times (\omega \times r) - 2\omega \times r
+\dot{v} &= -\dfrac{1-\mu}{\|r_1\|_2^3}r_1 - \dfrac{\mu}{\|r_2\|_2^3}r_2 - \omega \times (\omega \times r) - 2\omega \times r
 \\
 r(0) &= \bar{r}
 \\

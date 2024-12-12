@@ -12,7 +12,6 @@ using OrdinaryDiffEq
 
 include(joinpath(@__DIR__, "../src/NLPSaUT.jl"))
 
-
 function cr3bp_rhs!(du,u,p,t)
     # unpack state
     x, y, z = u[1], u[2], u[3]
@@ -73,10 +72,7 @@ end
 
 fitness_init = f_fitness(0.0, 0.0, 0.0)
 
-
 # get model
-order = 2
-diff_f = "forward"
 model = NLPSaUT.build_model(Ipopt.Optimizer, f_fitness, nx, nh, ng, lx, ux, x0; disable_memoize = false)
 set_optimizer_attribute(model, "tol", 1e-12)
 set_optimizer_attribute(model, "print_level", 5)

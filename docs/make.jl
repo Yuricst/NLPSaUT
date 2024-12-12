@@ -17,6 +17,7 @@ makedocs(
 		"Home" => "index.md",
         "Tutorials" => Any[
             "Basics" => "basics.md",
+            "Memoization" => "memoization.md",
         ],
 		"API" => Any[
 			"Core" => "api_core.md",

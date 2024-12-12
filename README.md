@@ -65,7 +65,9 @@ For examples, see the `examples` directory.
     - [ ] Finite difference gradient option
     - [ ] Analytical gradient option
 
-- Examples
+- Examples/documentation
     - [x] Simple example with Ipopt
     - [ ] Simple example with SNOPT via GAMS
-    - [ ] Example with astrodynamics (e.g. Lambert problem)
+    - [x] Example with ODEProblem
+    - [ ] Demonstration of memoization benefits
+    - [ ] Parallelized fitness function
